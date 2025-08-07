@@ -233,4 +233,5 @@ const ReceiptForm: React.FC<ReceiptFormProps> = ({
   );
 };
 
-export default ReceiptForm;
+import Receipts from './components/Receipts';
+
