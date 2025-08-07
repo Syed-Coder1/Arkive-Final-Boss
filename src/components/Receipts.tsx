@@ -461,4 +461,3 @@ export function Receipts({ showForm: externalShowForm, onCloseForm }: ReceiptsPr
             </button>
           </div>
         </form>
-      </div>
