@@ -297,8 +297,7 @@ export const TaxCalculator: React.FC = () => {
               { 
                 label: 'Tax Rate', 
                   icon: Calculator 
-                color: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
-                icon: PieIcon 
+                color: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400', 
               },
             ].map((c, i) => (
               <div key={i} className={`${c.color} p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700`}>
