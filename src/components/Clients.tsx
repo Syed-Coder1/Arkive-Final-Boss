@@ -171,8 +171,8 @@ export function Clients() {
 
       {/* form modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-opacity-60 flex items-center justify-center z-50 p-4 min-h-screen overflow-y-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md max-h-[85vh] overflow-y-auto shadow-2xl border border-gray-200 dark:border-gray-700">
+        <div className="form-modal">
+          <div className="form-container">
             <h2 className="text-xl font-bold mb-4 dark:text-white">
               {editingClient ? 'Edit' : 'New'} Client
             </h2>

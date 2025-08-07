@@ -342,12 +342,12 @@ export function Receipts({ showForm: externalShowForm, onCloseForm }: ReceiptsPr
 
       {/* New Receipt Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-opacity-60 flex items-center justify-center z-50 p-4 min-h-screen overflow-y-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md max-h-[85vh] overflow-y-auto shadow-2xl border border-gray-200 dark:border-gray-700">
+        <div className="form-modal">
+          <div className="form-container">
             <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
               {editingReceipt ? 'Edit Receipt' : 'New Receipt'}
             </h2>
-            <div className="max-h-[60vh] overflow-y-auto pr-2">
+            <div className="max-h-[60vh] overflow-y-auto">
               <form onSubmit={editingReceipt ? handleUpdate : handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">

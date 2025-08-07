@@ -31,25 +31,6 @@ import {
 } from 'recharts';
 import { taxCalculator as core, TaxCalculation } from '../services/taxCalculator';
 
-/* -----------------------------------------------------------
-   1.  Extra categories *with* official 2025-26 rates
------------------------------------------------------------ */
-export interface TaxBracket {
-  min: number;
-  max: number | null;
-  rate: number;
-  fixedAmount: number;
-}
-export interface TaxCategory {
-  id: string;
-  name: string;
-  description: string;
-  standardDeduction: number;
-  taxBrackets: TaxBracket[];
-  hasZakat: boolean;
-  nisabThreshold: number;
-}
-
 const extraCategories: Record<string, TaxCategory> = {
   bankProfit: {
     id: 'bankProfit',
@@ -298,7 +279,7 @@ export const TaxCalculator: React.FC = () => {
             {[
               { 
                 label: 'Gross Income', 
-                value: fmt(calc.grossIncome), 
+                  icon: Coins 
                 color: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400',
                 icon: DollarSign 
               },
@@ -316,7 +297,7 @@ export const TaxCalculator: React.FC = () => {
               },
               { 
                 label: 'Tax Rate', 
-                value: `${Math.round(calc.effectiveRate * 100) / 100}%`, 
+                  icon: Calculator 
                 color: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
                 icon: PieIcon 
               },

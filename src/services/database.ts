@@ -6,9 +6,29 @@ class DatabaseService {
   private dbVersion = 9;
   private db: IDBDatabase | null = null;
   private initPromise: Promise<void> | null = null;
+  private syncEnabled = true;
 
   constructor() {
     this.initPromise = this.init();
+    
+    // Enable auto-sync when online
+    window.addEventListener('online', () => {
+      if (this.syncEnabled) {
+        this.performAutoSync();
+      }
+    });
+  }
+
+  private async performAutoSync(): Promise<void> {
+    try {
+      // Check if Firebase is accessible
+      const isConnected = await firebaseSync.checkConnection();
+      if (isConnected) {
+        await firebaseSync.performFullSync();
+      }
+    } catch (error) {
+      console.warn('Auto-sync failed:', error);
+    }
   }
 
   private async ensureInitialized(): Promise<void> {
@@ -31,6 +51,8 @@ class DatabaseService {
         alert("A new version of the app is available. Please refresh.");
       };
 
+      // Initialize Firebase sync after database is ready
+      this.performAutoSync().catch(console.warn);
       resolve();
     };
 
@@ -94,7 +116,9 @@ class DatabaseService {
   async createUser(user: Omit<User, 'id'>): Promise<User> {
     const store = await this.getObjectStore('users', 'readwrite');
     const newUser: User = { ...user, id: crypto.randomUUID(), createdAt: new Date(), lastModified: new Date() };
-    firebaseSync.addToSyncQueue({ type: 'create', store: 'users', data: newUser }).catch(console.warn);
+    if (this.syncEnabled) {
+      firebaseSync.addToSyncQueue({ type: 'create', store: 'users', data: newUser }).catch(console.warn);
+    }
     return new Promise((resolve, reject) => {
       const req = store.add(newUser);
       req.onsuccess = () => resolve(newUser);

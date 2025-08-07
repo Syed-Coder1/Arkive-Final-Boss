@@ -688,8 +688,8 @@ export function EmployeeManagement() {
 
       {/* Employee Form Modal */}
       {showEmployeeForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent p-4">
-  <div className="relative w-full max-w-xl bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
+        <div className="form-modal">
+          <div className="form-container max-w-xl">
             <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
               {editingEmployee ? 'Edit Employee' : 'Add New Employee'}
             </h2>
@@ -888,8 +888,8 @@ export function EmployeeManagement() {
 
       {/* Attendance Modal */}
       {showAttendanceModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent p-4">
-  <div className="relative w-full max-w-xl bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
+        <div className="form-modal">
+          <div className="form-container max-w-xl">
             <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Mark Attendance</h2>
             
             <form onSubmit={handleAttendanceSubmit} className="space-y-4">
