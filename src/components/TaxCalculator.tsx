@@ -278,8 +278,7 @@ export const TaxCalculator: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { 
-                label: 'Gross Income', 
-                  icon: Coins 
+                label: 'Gross Income',  
                 color: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400',
                 icon: DollarSign 
               },
