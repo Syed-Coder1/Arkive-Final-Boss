@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Receipt, ReceiptFormData } from '../types';
+import ReceiptPreview from './ReceiptPreview';
 
 interface ReceiptFormProps {
   showForm: boolean;
@@ -8,6 +9,10 @@ interface ReceiptFormProps {
   onUpdateReceipt: (receipt: Receipt) => void;
   editingReceipt: Receipt | null;
   setEditingReceipt: (receipt: Receipt | null) => void;
+  showPreview: boolean;
+  setShowPreview: (show: boolean) => void;
+  selectedReceipt: Receipt | null;
+  setSelectedReceipt: (receipt: Receipt | null) => void;
 }
 
 const ReceiptForm: React.FC<ReceiptFormProps> = ({
@@ -17,6 +22,10 @@ const ReceiptForm: React.FC<ReceiptFormProps> = ({
   onUpdateReceipt,
   editingReceipt,
   setEditingReceipt,
+  showPreview,
+  setShowPreview,
+  selectedReceipt,
+  setSelectedReceipt,
 }) => {
   const [formData, setFormData] = useState<ReceiptFormData>({
     clientName: '',
@@ -74,6 +83,16 @@ const ReceiptForm: React.FC<ReceiptFormProps> = ({
     };
     onUpdateReceipt(updatedReceipt);
     resetForm();
+  };
+
+  const handlePreview = () => {
+    const receipt: Receipt = {
+      id: editingReceipt ? editingReceipt.id : Date.now(),
+      ...formData,
+      amount: parseInt(formData.amount.replace(/,/g, '')),
+    };
+    setSelectedReceipt(receipt);
+    setShowPreview(true);
   };
 
   if (!showForm) return null;
@@ -192,6 +211,13 @@ const ReceiptForm: React.FC<ReceiptFormProps> = ({
                 className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
               >
                 Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handlePreview}
+                className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-yellow-200 dark:bg-yellow-700 rounded-lg hover:bg-yellow-300 dark:hover:bg-yellow-600 transition-colors"
+              >
+                Preview
               </button>
               <button
                 type="submit"
