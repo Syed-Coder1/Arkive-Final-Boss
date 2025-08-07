@@ -341,27 +341,20 @@ export function Receipts({ showForm: externalShowForm, onCloseForm }: ReceiptsPr
       </div>
 
       {/* New Receipt Form Modal */}
-      {showForm && (
-        <div className="form-modal">
-          <div className="form-container">
-            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-              {editingReceipt ? 'Edit Receipt' : 'New Receipt'}
-            </h2>
-            <div className="max-h-[60vh] overflow-y-auto">
-              <form onSubmit={editingReceipt ? handleUpdate : handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Client Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.clientName}
-                    onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
-                    placeholder="Enter client name"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    required
-                  />
-                </div>
+{showForm && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg w-full max-w-xl">
+      <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+        {editingReceipt ? 'Edit Receipt' : 'New Receipt'}
+      </h2>
+      <div className="max-h-[60vh] overflow-y-auto">
+        <form onSubmit={editingReceipt ? handleUpdate : handleSubmit} className="space-y-4">
+          {/* your form fields stay the same */}
+        </form>
+      </div>
+    </div>
+  </div>
+)}
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
