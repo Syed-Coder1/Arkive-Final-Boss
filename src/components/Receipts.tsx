@@ -449,4 +449,19 @@ export function Receipts({ showForm: externalShowForm, onCloseForm }: ReceiptsPr
             <button
               type="button"
               onClick={resetForm}
-              className="flex-1 px-4
+              className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              {editingReceipt ? 'Update Receipt' : 'Create Receipt'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+)}
