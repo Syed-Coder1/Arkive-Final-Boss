@@ -172,7 +172,7 @@ export function Clients() {
     {/* form modal */}
 {showForm && (
   <div className="flex items-center justify-center">
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-6 w-full max-w-md">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-12 w-full max-w-md">
       <h2 className="text-xl font-bold mb-4 dark:text-white">
         {editingClient ? 'Edit' : 'New'} Client
       </h2>
