@@ -230,6 +230,7 @@ export function Clients() {
         </div>
       </form>
     </div>
-  </div>
-);
+      </div>
+  );
 }
+
