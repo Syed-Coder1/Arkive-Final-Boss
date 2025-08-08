@@ -81,7 +81,7 @@ function AppContent() {
       case 'dashboard':
         return <Dashboard onPageChange={handlePageChange} onOpenForm={handleOpenForm} />;
       case 'receipts':
-        return <Receipts showForm={showReceiptForm} onCloseForm={() => setShowReceiptForm(false)} />;
+        return <ReceiptForm showForm={showReceiptForm} onCloseForm={() => setShowReceiptForm(false)} />;
       case 'clients':
         return <Clients showForm={showClientForm} onCloseForm={() => setShowClientForm(false)} />;
       case 'vault':
