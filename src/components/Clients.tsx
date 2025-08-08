@@ -227,8 +227,11 @@ export function Clients() {
           <button type="submit" className="flex-1 bg-blue-600 text-white rounded-lg">
             {editingClient ? 'Update' : 'Create'}
           </button>
-        </div>
-            </form>
+               </div>
+      </form>
     </div>
   </div>
 )}
+</div>
+);
+}
