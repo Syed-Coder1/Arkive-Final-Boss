@@ -200,17 +200,20 @@ class TaxCalculatorService {
   private readonly zakatRate = 0.025;
 
   /* ---------- helpers ---------- */
-  private _computeTax(brackets: TaxBracket[], taxable: number): number {
-    let tax = 0;
-    for (const b of brackets) {
-      if (taxable <= b.min) break;
+ private _computeTax(brackets: TaxBracket[], taxable: number): number {
+  let tax = 0;
+  for (const b of brackets) {
+    if (taxable > b.min) {
       const maxInBracket = b.max ?? taxable;
-      const excess = Math.min(taxable, maxInBracket) - b.min;
-      tax += b.fixedAmount + excess * b.rate;
-      break; // Only apply the first matching bracket
+      const amountInBracket = Math.min(taxable, maxInBracket) - b.min;
+      tax += amountInBracket * b.rate + b.fixedAmount;
+    } else {
+      break;
     }
-    return tax;
   }
+  return tax;
+}
+
 
   /* ---------- public API ---------- */
   getTaxCategories(): TaxCategory[] {
