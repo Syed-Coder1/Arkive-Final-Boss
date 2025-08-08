@@ -169,9 +169,9 @@ export function Clients() {
         </table>
       </div>
 
-      {/* form modal */}
-      {showForm && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+    {/* form modal */}
+{showForm && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
       <h2 className="text-xl font-bold mb-4 dark:text-white">
         {editingClient ? 'Edit' : 'New'} Client
@@ -193,7 +193,10 @@ export function Clients() {
           onChange={(e) => setForm({ ...form, type: e.target.value as Client['type'] })}
           className="w-full px-3 py-2 border rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white"
         >
-          <option>IRIS</option><option>SECP</option><option>PRA</option><option>Other</option>
+          <option>IRIS</option>
+          <option>SECP</option>
+          <option>PRA</option>
+          <option>Other</option>
         </select>
         <textarea
           placeholder="Notes"
@@ -213,7 +216,10 @@ export function Clients() {
         <div className="flex gap-2">
           <button
             type="button"
-            onClick={() => { resetForm(); setShowForm(false); }}
+            onClick={() => {
+              resetForm();
+              setShowForm(false);
+            }}
             className="flex-1 bg-gray-300 dark:bg-gray-600 rounded-lg"
           >
             Cancel
