@@ -371,6 +371,15 @@ class DatabaseService {
     });
   }
 
+  async deleteNotification(id: string): Promise<void> {
+    const store = await this.getObjectStore('notifications', 'readwrite');
+    return new Promise((resolve, reject) => {
+      const req = store.delete(id);
+      req.onsuccess = () => resolve();
+      req.onerror = () => reject(req.error);
+    });
+  }
+
   // ------------------ DOCUMENTS ------------------
   async createDocument(doc: Omit<Document, 'id' | 'uploadedAt' | 'accessLog'>): Promise<Document> {
     const store = await this.getObjectStore('documents', 'readwrite');

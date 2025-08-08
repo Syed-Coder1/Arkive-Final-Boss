@@ -31,73 +31,8 @@ import {
 } from 'recharts';
 import { taxCalculator as core, TaxCalculation } from '../services/taxCalculator';
 
-const extraCategories: Record<string, TaxCategory> = {
-  bankProfit: {
-    id: 'bankProfit',
-    name: 'Bank Profit / P-O-D',
-    description: 'Profit on Debt (§151) – Savings, NSS, Bonds',
-    standardDeduction: 0,
-    taxBrackets: [
-      { min: 0, max: 5000000, rate: 0.15, fixedAmount: 0 },
-      { min: 5000001, max: null, rate: 0.175, fixedAmount: 0 },
-    ],
-    hasZakat: false,
-    nisabThreshold: 0,
-  },
-  dividend: {
-    id: 'dividend',
-    name: 'Dividend Income',
-    description: 'Dividend (§150) – Public / Private Companies',
-    standardDeduction: 0,
-    taxBrackets: [
-      { min: 0, max: null, rate: 0.15, fixedAmount: 0 }, // 15 % flat
-    ],
-    hasZakat: false,
-    nisabThreshold: 0,
-  },
-  capitalGainsSecurities: {
-    id: 'capitalGainsSecurities',
-    name: 'Capital-Gains (Securities)',
-    description: 'Listed / Mutual-Fund units (§37A)',
-    standardDeduction: 0,
-    taxBrackets: [
-      { min: 0, max: 5000000, rate: 0.15, fixedAmount: 0 },
-      { min: 5000001, max: null, rate: 0.175, fixedAmount: 0 },
-    ],
-    hasZakat: false,
-    nisabThreshold: 0,
-  },
-  builderDeveloper: {
-    id: 'builderDeveloper',
-    name: 'Builder & Developer',
-    description: 'Fixed Tax on construction & sale (§7F)',
-    standardDeduction: 0,
-    taxBrackets: [
-      { min: 0, max: null, rate: 0.1, fixedAmount: 0 }, // 10 % on gross receipts
-    ],
-    hasZakat: false,
-    nisabThreshold: 0,
-  },
-  transport: {
-    id: 'transport',
-    name: 'Goods Transport Vehicle',
-    description: 'Tax per vehicle (§234) – 2025-26',
-    standardDeduction: 0,
-    taxBrackets: [
-      { min: 0, max: 1, rate: 0, fixedAmount: 10000 },
-      { min: 1, max: 2, rate: 0, fixedAmount: 15000 },
-      { min: 2, max: 3, rate: 0, fixedAmount: 25000 },
-      { min: 3, max: 4, rate: 0, fixedAmount: 35000 },
-      { min: 4, max: 5, rate: 0, fixedAmount: 45000 },
-      { min: 5, max: null, rate: 0, fixedAmount: 50000 },
-    ],
-    hasZakat: false,
-    nisabThreshold: 0,
-  },
-};
-
-/* Merge new categories with core */
-const allCategories = [...core.getTaxCategories(), ...Object.values(extraCategories)];
+/* Get categories from core service */
+const allCategories = core.getTaxCategories();
 
 /* -----------------------------------------------------------
    Component starts here
@@ -121,26 +56,7 @@ export const TaxCalculator: React.FC = () => {
 
     // use core taxCalculator for built-ins, our own for extras
     const catObj = allCategories.find((c) => c.id === categoryId)!;
-    if (!Object.keys(extraCategories).includes(categoryId)) {
-      return core.calculateTax(categoryId, numericInput, period === 'monthly', includeZakat);
-    }
-    // Fixed-tax categories (custom calc)
-    let totalTax = 0;
-    for (const b of catObj.taxBrackets) {
-      if (annual <= b.min) break;
-      if (!b.max || annual <= b.max) {
-        totalTax = b.fixedAmount + (annual - b.min) * b.rate;
-        break;
-      }
-    }
-    return {
-      grossIncome: annual,
-      taxableIncome: annual,
-      totalTax: totalTax,
-      netIncome: annual - totalTax,
-      effectiveRate: annual > 0 ? (totalTax / annual) * 100 : 0,
-      breakdown: [],
-    };
+    return core.calculateTax(categoryId, numericInput, period === 'monthly', includeZakat);
   }, [categoryId, numericInput, period, includeZakat]);
 
   /* ---------- Helpers ---------- */
@@ -279,8 +195,9 @@ export const TaxCalculator: React.FC = () => {
             {[
               { 
                 label: 'Gross Income',  
+                value: fmt(calc.grossIncome),
                 color: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400',
-                icon: DollarSign 
+                icon: Coins 
               },
               { 
                 label: 'Total Tax', 
@@ -296,6 +213,7 @@ export const TaxCalculator: React.FC = () => {
               },
               { 
                 label: 'Tax Rate', 
+                value: `${calc.effectiveRate.toFixed(1)}%`,
                   icon: Calculator, 
                 color: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400', 
               },
@@ -408,7 +326,7 @@ export const TaxCalculator: React.FC = () => {
 
           <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-6 text-sm">
             <div className="flex items-start gap-2">
-            <Info className="inline w-4 h-4 mr-1" />
+              <Info className="w-4 h-4 text-yellow-600 dark:text-yellow-400 mt-0.5" />
               <div>
                 <p className="font-medium text-yellow-800 dark:text-yellow-200 mb-1">Important Disclaimer</p>
                 <p className="text-yellow-700 dark:text-yellow-300">

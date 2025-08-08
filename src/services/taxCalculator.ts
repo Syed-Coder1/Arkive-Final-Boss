@@ -202,16 +202,12 @@ class TaxCalculatorService {
   /* ---------- helpers ---------- */
   private _computeTax(brackets: TaxBracket[], taxable: number): number {
     let tax = 0;
-    // Business extra 10 % surcharge if > 10 M
-    const isBusiness = brackets.some((b) => b.fixedAmount === 1_610_000);
     for (const b of brackets) {
       if (taxable <= b.min) break;
       const maxInBracket = b.max ?? taxable;
       const excess = Math.min(taxable, maxInBracket) - b.min;
       tax += b.fixedAmount + excess * b.rate;
-      if (isBusiness && taxable > 10_000_000) {
-        tax += tax * 0.10; // surcharge
-      }
+      break; // Only apply the first matching bracket
     }
     return tax;
   }

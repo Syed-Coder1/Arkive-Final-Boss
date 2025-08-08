@@ -127,6 +127,10 @@ class FirebaseSyncService {
       throw new Error('Unauthorized access attempt');
     }
 
+    if (!this.isOnline) {
+      throw new Error('Cannot sync while offline');
+    }
+
     const path = `${operation.store}/${operation.data.id}`;
     const dataRef = ref(rtdb, path);
 
