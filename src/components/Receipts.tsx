@@ -475,7 +475,7 @@ export default function Receipts({ showForm: externalShowForm, onCloseForm }: Re
       {/* Preview Modal */}
       {showPreview && selectedReceipt && (
         <div className="fixed inset-0 flex items-center justify-center">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md shadow-2xl">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-6 w-full max-w-md">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">Receipt Preview</h2>
               <button
