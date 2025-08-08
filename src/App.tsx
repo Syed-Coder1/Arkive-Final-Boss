@@ -3,7 +3,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Login } from './components/Login';
 import { Layout } from './components/Layout';
 import { Dashboard } from './components/Dashboard';
-import { Receipts } from './components/Receipts';
+import ReceiptForm from './components/Receipts'; // ✅ CORRECT
 import { Clients } from './components/Clients';
 import { Vault } from './components/Vault';
 import { Expenses, ActivityLog, BackupRestore } from './components/SimplePages';
