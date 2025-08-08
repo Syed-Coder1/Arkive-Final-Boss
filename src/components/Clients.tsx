@@ -231,5 +231,4 @@ export function Clients() {
       </form>
     </div>
   </div>
-);
-}
+)}
