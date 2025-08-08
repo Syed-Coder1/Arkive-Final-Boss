@@ -214,7 +214,6 @@ class TaxCalculatorService {
   return tax;
 }
 
-
   /* ---------- public API ---------- */
   getTaxCategories(): TaxCategory[] {
     return Object.values(this.taxCategories);
