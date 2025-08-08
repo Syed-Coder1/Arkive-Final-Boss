@@ -178,15 +178,17 @@ export function Clients() {
       </h2>
       <form onSubmit={handleSubmit} className="space-y-3">
         {['name', 'cnic', 'phone', 'email'].map((k) => (
-          <input
-            key={k}
-            type={k === 'email' ? 'email' : 'text'}
-            placeholder={k.charAt(0).toUpperCase() + k.slice(1)}
-            value={form[k as keyof typeof form]}
-            onChange={(e) => setForm({ ...form, [k]: e.target.value })}
-            className="w-full px-3 py-2 border rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-            maxLength={k === 'cnic' ? 13 : undefined}
-          />
+         <input
+  key={k}
+  type={k === 'email' ? 'email' : 'text'}
+  placeholder={k.charAt(0).toUpperCase() + k.slice(1)}
+  value={form[k as keyof typeof form]}
+  onChange={(e) => setForm({ ...form, [k]: e.target.value })}
+  className="w-full px-3 py-2 border rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+  maxLength={k === 'cnic' ? 13 : undefined}
+  required={k === 'name' || k === 'cnic'}
+/>
+
         ))}
         <select
           value={form.type}
