@@ -228,11 +228,7 @@ export function Clients() {
             {editingClient ? 'Update' : 'Create'}
           </button>
         </div>
-      </form>
+            </form>
     </div>
   </div>
-);
-}
-    </div>
-  );
-}
+)}
