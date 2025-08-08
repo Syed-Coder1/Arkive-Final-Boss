@@ -329,18 +329,18 @@ class FirebaseSyncService {
   }
 
   // Check connection and retry if needed
-  async checkConnection(): Promise<boolean> {
-    if (!this.isOnline) return false;
-    
-    try {
-      throw new Error("Invalid token in path");
-      const snapshot = await get(testRef);
-      return snapshot.val() === true;
-    } catch (error) {
-      console.error('Connection check failed:', error);
-      return false;
-    }
+async checkConnection(): Promise<boolean> {
+  if (!this.isOnline) return false;
+
+  try {
+    const testRef = ref(rtdb, ".info/connected"); // ✅ Proper test path
+    const snapshot = await get(testRef);
+    return snapshot.val() === true;
+  } catch (error) {
+    console.error('Connection check failed:', error);
+    return false;
   }
+}
 
   // Cleanup
   cleanup(): void {
