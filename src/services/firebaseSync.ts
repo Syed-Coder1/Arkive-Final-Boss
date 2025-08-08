@@ -330,17 +330,26 @@ class FirebaseSyncService {
 
   // Check connection and retry if needed
 async checkConnection(): Promise<boolean> {
-  if (!this.isOnline) return false;
+  return new Promise((resolve) => {
+    if (!this.isOnline) return resolve(false);
 
-  try {
-    const testRef = ref(rtdb, ".info/connected"); // ✅ Proper test path
-    const snapshot = await get(testRef);
-    return snapshot.val() === true;
-  } catch (error) {
-    console.error('Connection check failed:', error);
-    return false;
-  }
+    try {
+      const connectedRef = ref(rtdb, ".info/connected");
+      onValue(
+        connectedRef,
+        (snap) => {
+          resolve(snap.val() === true);
+          off(connectedRef); // ✅ Stop listener after check
+        },
+        { onlyOnce: true }
+      );
+    } catch (error) {
+      console.error("Connection check failed:", error);
+      resolve(false);
+    }
+  });
 }
+
 
   // Cleanup
   cleanup(): void {
