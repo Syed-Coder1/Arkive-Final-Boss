@@ -242,9 +242,9 @@ class TaxCalculatorService {
       zakat = annual * this.zakatRate;
     }
 
-    const finalTax = totalTax + zakat;
-    const net = annual - finalTax;
-    const effRate = annual > 0 ? (finalTax / annual) * 100 : 0;
+const finalTax = Math.round(totalTax + zakat);
+const net = Math.round(annual - finalTax);
+const effRate = annual > 0 ? Math.round((finalTax / annual) * 100) : 0;
 
     return {
       grossIncome: annual,
