@@ -4,7 +4,7 @@ import { getDatabase } from 'firebase/database';
 const firebaseConfig = {
   apiKey: "AIzaSyDIo7q8OuI1P63q9t9E1s-ENQjBdCd37nI",
   authDomain: "arkive-da661.firebaseapp.com",
-  databaseURL: "https://arkive-da661-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL: "https://arkive-da661-default-rtdb.firebaseio.com", // ✅ FIXED HERE
   projectId: "arkive-da661",
   storageBucket: "arkive-da661.firebasestorage.app",
   messagingSenderId: "416097604327",
