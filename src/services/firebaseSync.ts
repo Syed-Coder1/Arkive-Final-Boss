@@ -333,7 +333,7 @@ class FirebaseSyncService {
     if (!this.isOnline) return false;
     
     try {
-      Error: Invalid token in path
+      throw new Error("Invalid token in path");
       const snapshot = await get(testRef);
       return snapshot.val() === true;
     } catch (error) {
