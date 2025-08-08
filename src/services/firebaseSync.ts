@@ -349,8 +349,6 @@ async checkConnection(): Promise<boolean> {
     }
   });
 }
-
-
   // Cleanup
   cleanup(): void {
     Object.keys(this.listeners).forEach(storeName => {
