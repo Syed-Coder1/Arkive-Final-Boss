@@ -171,36 +171,58 @@ export function Clients() {
 
       {/* form modal */}
       {showForm && (
-        <div className="form-modal">
-          <div className="form-container">
-            <h2 className="text-xl font-bold mb-4 dark:text-white">
-              {editingClient ? 'Edit' : 'New'} Client
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-3">
-              {['name', 'cnic', 'phone', 'email'].map((k) => (
-                <input
-                  key={k}
-                  type={k === 'email' ? 'email' : 'text'}
-                  placeholder={k.charAt(0).toUpperCase() + k.slice(1)}
-                  value={form[k as keyof typeof form]}
-                  onChange={(e) => setForm({ ...form, [k]: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                  maxLength={k === 'cnic' ? 13 : undefined}
-                />
-              ))}
-              <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value as Client['type'] })} className="w-full px-3 py-2 border rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                <option>IRIS</option><option>SECP</option><option>PRA</option><option>Other</option>
-              </select>
-              <textarea placeholder="Notes" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={2} className="w-full px-3 py-2 border rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white" />
-              <input type="password" placeholder="Password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full px-3 py-2 border rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white" required={!editingClient} />
-              <div className="flex gap-2">
-                <button type="button" onClick={() => { resetForm(); setShowForm(false); }} className="flex-1 bg-gray-300 dark:bg-gray-600 rounded-lg">Cancel</button>
-                <button type="submit" className="flex-1 bg-blue-600 text-white rounded-lg">{editingClient ? 'Update' : 'Create'}</button>
-              </div>
-            </form>
-          </div>
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
+      <h2 className="text-xl font-bold mb-4 dark:text-white">
+        {editingClient ? 'Edit' : 'New'} Client
+      </h2>
+      <form onSubmit={handleSubmit} className="space-y-3">
+        {['name', 'cnic', 'phone', 'email'].map((k) => (
+          <input
+            key={k}
+            type={k === 'email' ? 'email' : 'text'}
+            placeholder={k.charAt(0).toUpperCase() + k.slice(1)}
+            value={form[k as keyof typeof form]}
+            onChange={(e) => setForm({ ...form, [k]: e.target.value })}
+            className="w-full px-3 py-2 border rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+            maxLength={k === 'cnic' ? 13 : undefined}
+          />
+        ))}
+        <select
+          value={form.type}
+          onChange={(e) => setForm({ ...form, type: e.target.value as Client['type'] })}
+          className="w-full px-3 py-2 border rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+        >
+          <option>IRIS</option><option>SECP</option><option>PRA</option><option>Other</option>
+        </select>
+        <textarea
+          placeholder="Notes"
+          value={form.notes}
+          onChange={(e) => setForm({ ...form, notes: e.target.value })}
+          rows={2}
+          className="w-full px-3 py-2 border rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          className="w-full px-3 py-2 border rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+          required={!editingClient}
+        />
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => { resetForm(); setShowForm(false); }}
+            className="flex-1 bg-gray-300 dark:bg-gray-600 rounded-lg"
+          >
+            Cancel
+          </button>
+          <button type="submit" className="flex-1 bg-blue-600 text-white rounded-lg">
+            {editingClient ? 'Update' : 'Create'}
+          </button>
         </div>
-      )}
+      </form>
     </div>
-  );
-}
+  </div>
+)}
