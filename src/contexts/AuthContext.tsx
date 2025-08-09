@@ -22,6 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const initAuth = async () => {
       try {
         await auth.init();
+        auth.startSessionMonitoring(); // Start session monitoring
         setUser(auth.getCurrentUser());
       } catch (error) {
         console.error('Auth initialization error:', error);

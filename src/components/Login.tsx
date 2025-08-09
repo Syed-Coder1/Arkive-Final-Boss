@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Eye, EyeOff, LogIn, UserPlus, Shield, Users, AlertCircle, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, LogIn, UserPlus, Shield, Users, AlertCircle, CheckCircle, Wifi, WifiOff } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../services/database';
+import { firebaseSync } from '../services/firebaseSync';
 
 export function Login() {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
@@ -14,11 +15,35 @@ export function Login() {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [canCreateAdmin, setCanCreateAdmin] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [syncStatus, setSyncStatus] = useState<string>('Checking...');
   const { login } = useAuth();
 
   useEffect(() => {
     checkAdminCount();
+    checkConnectionStatus();
+    
+    // Monitor online status
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+    
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
   }, []);
+
+  const checkConnectionStatus = async () => {
+    try {
+      const connected = await firebaseSync.checkConnection();
+      setSyncStatus(connected ? 'Connected to Firebase' : 'Offline Mode');
+    } catch (error) {
+      setSyncStatus('Connection Error');
+    }
+  };
 
   const checkAdminCount = async () => {
     try {
@@ -27,6 +52,7 @@ export function Login() {
       setCanCreateAdmin(adminCount < 2);
     } catch (error) {
       console.error('Error checking admin count:', error);
+      setCanCreateAdmin(true); // Allow creation if error (might be initial setup)
     }
   };
 
@@ -87,11 +113,30 @@ export function Login() {
           createdAt: new Date(),
         });
 
+        // Sync to Firebase if online
+        if (isOnline) {
+          try {
+            await firebaseSync.addToSyncQueue({
+              type: 'create',
+              store: 'users',
+              data: {
+                id: crypto.randomUUID(),
+                username,
+                password,
+                role: 'admin',
+                createdAt: new Date(),
+              }
+            });
+          } catch (syncError) {
+            console.warn('Failed to sync to Firebase:', syncError);
+          }
+        }
+
         // Log the account creation
         await db.createActivity({
           userId: 'system',
           action: 'admin_signup',
-          details: `New admin account created: ${username}`,
+          details: `New admin account created: ${username}. Connection: ${isOnline ? 'Online' : 'Offline'}`,
           timestamp: new Date(),
         });
 
@@ -127,7 +172,7 @@ export function Login() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900 dark:to-indigo-900 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-100 dark:border-gray-700">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-100 dark:border-gray-700 animate-fadeIn">
         {/* Logo and Branding */}
         <div className="text-center mb-8">
           <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
@@ -141,7 +186,20 @@ export function Login() {
               Secure Tax Management System
             </p>
           </div>
-          <div className="flex items-center justify-center space-x-4 text-xs text-gray-500 dark:text-gray-400 mt-3">
+          
+          {/* Connection Status */}
+          <div className="flex items-center justify-center space-x-2 text-xs mt-3">
+            {isOnline ? (
+              <Wifi className="w-3 h-3 text-green-500" />
+            ) : (
+              <WifiOff className="w-3 h-3 text-red-500" />
+            )}
+            <span className={isOnline ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+              {syncStatus}
+            </span>
+          </div>
+          
+          <div className="flex items-center justify-center space-x-4 text-xs text-gray-500 dark:text-gray-400 mt-2">
             <div className="flex items-center">
               <Shield className="w-3 h-3 mr-1" />
               <span>Encrypted</span>
@@ -153,32 +211,33 @@ export function Login() {
           </div>
         </div>
 
-        {/* Mode Toggle */}
-        <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1 mb-6">
+        {/* Stacked Mode Toggle */}
+        <div className="space-y-2 mb-6">
           <button
             type="button"
             onClick={() => switchMode('login')}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
+            className={`w-full py-3 px-4 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center ${
               mode === 'login'
-                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                ? 'bg-blue-600 text-white shadow-lg'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
-            <LogIn className="w-4 h-4 inline mr-2" />
-            Sign In
+            <LogIn className="w-4 h-4 mr-2" />
+            Sign In to Account
           </button>
+          
           <button
             type="button"
             onClick={() => switchMode('signup')}
             disabled={!canCreateAdmin}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
+            className={`w-full py-3 px-4 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center ${
               mode === 'signup'
-                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                ? 'bg-blue-600 text-white shadow-lg'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
             } ${!canCreateAdmin ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            <UserPlus className="w-4 h-4 inline mr-2" />
-            Admin Sign Up
+            <UserPlus className="w-4 h-4 mr-2" />
+            Create Admin Account
           </button>
         </div>
 
@@ -266,7 +325,7 @@ export function Login() {
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg flex items-center">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg flex items-center animate-slideInRight">
               <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" />
               <span className="text-sm">{error}</span>
             </div>
@@ -274,7 +333,7 @@ export function Login() {
 
           {/* Success Message */}
           {success && (
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 px-4 py-3 rounded-lg flex items-center">
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 px-4 py-3 rounded-lg flex items-center animate-slideInRight">
               <CheckCircle className="w-4 h-4 mr-2 flex-shrink-0" />
               <span className="text-sm">{success}</span>
             </div>
@@ -317,11 +376,11 @@ export function Login() {
             <div className="grid grid-cols-2 gap-4 text-xs text-gray-600 dark:text-gray-400">
               <div className="flex items-center justify-center">
                 <Shield className="w-3 h-3 mr-1 text-green-500" />
-                <span>Encrypted Storage</span>
+                <span>Firebase Sync</span>
               </div>
               <div className="flex items-center justify-center">
                 <Users className="w-3 h-3 mr-1 text-blue-500" />
-                <span>Role-based Access</span>
+                <span>Session Tracking</span>
               </div>
             </div>
           </div>
